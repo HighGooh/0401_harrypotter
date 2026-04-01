@@ -18,23 +18,30 @@ from tensorflow.keras.utils import to_categorical
 # 파일 경로 설정
 BOOK_LIST = ["book1.txt","book2.txt","book3.txt","book4.txt","book5.txt","book6.txt","book7.txt"]
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-BOOK_PATH = os.path.join(BASE_DIR, "books", BOOK_LIST[0])
+# BOOK_PATH = os.path.join(BASE_DIR, "books", BOOK_LIST[0])
 
 def save_file(data):
-  save_path = os.path.join(os.getcwd(), "data", f"data.csv")
-  with open(save_path, 'w', encoding='utf-8', newline='') as f:
-    writer = csv.writer(f)
-    writer.writerows(data)
+    save_path = os.path.join(os.getcwd(), "data", "data.csv")
+    with open(save_path, 'w', encoding='utf-8', newline='') as f:
+        writer = csv.writer(f)
+        # 데이터를 리스트([])로 감싸서 '한 줄'임을 명시합니다.
+        writer.writerows(data)  # writer 대신 f.write를 사용하세요!
 
 def load_data():
   """파일을 읽어오는 공통 함수"""
   try:
-    with open(BOOK_PATH, 'r', encoding='utf-8') as f:
-      return f.read()
+    content = ""
+    for item in BOOK_LIST :
+      BOOK_PATH = os.path.join(BASE_DIR, "books", item)
+      with open(BOOK_PATH, 'r', encoding='utf-8') as f:
+        content = content + f.read()
+    return content
+    
   except FileNotFoundError:
     print(f"에러: {BOOK_PATH} 파일을 찾을 수 없습니다.")
     return ""
-  
+
+
 def step1_file_sentence():
   """
   [실습 1] 파일 전체를 문장 단위로 분리하기
@@ -139,7 +146,7 @@ def padding():
   encoded = tokenizer.texts_to_sequences(preprocessed_sentences)
   max_len = max(len(item) for item in encoded)
   padded = pad_sequences(encoded, padding='post', maxlen=max_len)
-  save_file(padded)
+  # save_file(padded)
   
   return(padded)
 
@@ -166,4 +173,4 @@ def one_hot_encoding():
   return encoding_list
 
 
-one_hot_encoding()
+padding()

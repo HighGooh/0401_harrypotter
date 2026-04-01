@@ -87,6 +87,7 @@ def stopWord():
       if word not in stop_words:
         list.append(word.lower())
     result.append(list)
+  # save_file(result)
   return result
 
 
@@ -138,6 +139,31 @@ def padding():
   encoded = tokenizer.texts_to_sequences(preprocessed_sentences)
   max_len = max(len(item) for item in encoded)
   padded = pad_sequences(encoded, padding='post', maxlen=max_len)
+  save_file(padded)
+  
   return(padded)
 
-padding()
+
+
+def one_hot_encoding():
+  word_token = padding()
+  max_list = []
+  for word_list in word_token: 
+    temp = int(max(item for item in word_list))
+    max_list.append(temp)
+
+  max_size = (max(item for item in max_list))
+  print(max_size)
+  encoding_list = []
+
+  for i, word_list in enumerate(word_token):
+    temp_list = [0] * (max_size + 1)
+    for word_index in word_list:
+      temp_list[int(word_index)] = 1
+    encoding_list.append(temp_list)
+
+  # save_file(encoding_list)
+  return encoding_list
+
+
+one_hot_encoding()
